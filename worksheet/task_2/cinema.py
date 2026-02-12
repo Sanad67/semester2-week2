@@ -24,11 +24,11 @@ def customer_tickets(conn, customer_id):
                 FROM tickets t 
                 JOIN screenings s 
                 ON s.screening_id = t.screening_id
-                JOIN film f 
+                JOIN films f 
                 ON s.film_id = f.film_id
-                WHERE t.custumer_id = ?
+                WHERE t.customer_id = ?
 
-                ORDER BY f_title;
+                ORDER BY f.title;
                 '''
     return conn.execute(query, (customer_id,)).fetchall()
 
@@ -56,7 +56,8 @@ def screening_sales(conn):
                 ORDER BY tickets_sold DESC;
                 '''
     
-    return conn.execute(query, (,)).fetchall()
+    return conn.execute(query).fetchall()
+
 
 
 def top_customers_by_spend(conn, limit):
@@ -71,7 +72,7 @@ def top_customers_by_spend(conn, limit):
     """
     query = '''
                 SELECT c.customer_name, SUM(t.price) AS total_spent
-                FROM customer c
+                FROM customers c
                 JOIN tickets t 
                 ON c.customer_id = t.customer_id
                 GROUP BY c.customer_name, c.customer_id
